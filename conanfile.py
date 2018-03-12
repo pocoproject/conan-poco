@@ -182,4 +182,4 @@ cxx_14=False
         if not self.options.shared:
             self.cpp_info.defines.extend(["POCO_STATIC=ON", "POCO_NO_AUTOMATIC_LIBS"])
             if self.settings.compiler == "Visual Studio":
-                self.cpp_info.libs.extend(["ws2_32", "Iphlpapi.lib", "Crypt32.lib"])
+                self.cpp_info.libs.extend(["ws2_32", "Iphlpapi", "Crypt32"])
