@@ -25,6 +25,8 @@ class PocoConan(ConanFile):
                "enable_netssl": [True, False],
                "enable_netssl_win": [True, False],
                "enable_crypto": [True, False],
+               "enable_encodings": [True, False],
+               "enable_redis": [True, False],
                "enable_data": [True, False],
                "enable_data_sqlite": [True, False],
                "enable_data_mysql": [True, False],
@@ -53,6 +55,8 @@ enable_net=True
 enable_netssl=True
 enable_netssl_win=True
 enable_crypto=True
+enable_encodings=True
+enable_redis=True
 enable_data=True
 enable_data_sqlite=True
 enable_data_mysql=False
@@ -152,6 +156,8 @@ cxx_14=False
                 ("enable_netssl", "PocoNetSSL"),
                 ("enable_netssl_win", "PocoNetSSLWin"),
                 ("enable_crypto", "PocoCrypto"),
+                ("enable_encodings", "PocoEncodings"),
+                ("enable_redis", "PocoRedis"),
                 ("enable_data", "PocoData"),
                 ("enable_data_sqlite", "PocoDataSQLite"),
                 ("enable_data_mysql", "PocoDataMySQL"),
