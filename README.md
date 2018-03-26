@@ -47,5 +47,7 @@ Complete the installation of requirements for your project running:
 
     conan install .
 
-Project setup installs the library (and all his dependencies) and generates the files *conanbuildinfo.txt* and *conanbuildinfo.cmake* with all the paths and variables that you need to link with your dependencies.
+Project setup installs the library (and all his dependencies) and generates
+the files *conanbuildinfo.txt* and *conanbuildinfo.cmake* with all the paths
+and variables that you need to link with your dependencies.
 

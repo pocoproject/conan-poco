@@ -8,6 +8,7 @@ class DefaultNameConan(ConanFile):
     version = "0.1"
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake"
+    requires = "Poco/1.9.0@pocoproject/stable"
 
     def build(self):
         cmake = CMake(self)

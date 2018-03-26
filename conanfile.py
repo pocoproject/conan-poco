@@ -9,7 +9,7 @@ class PocoConan(ConanFile):
     name = "Poco"
     version = "1.9.0"
     url = "http://github.com/pocoproject/conan-poco"
-    exports_sources = "CMakeLists.txt", "PocoMacros.cmake"  # REMOVE POCOMACROS IN NEXT VERSION!
+    exports_sources = "CMakeLists.txt", "PocoMacros.cmake"  # TODO: REMOVE POCOMACROS IN NEXT VERSION!
     generators = "cmake", "txt"
     settings = "os", "arch", "compiler", "build_type"
     license = "The Boost Software License 1.0"
@@ -38,7 +38,7 @@ class PocoConan(ConanFile):
                "enable_pagecompiler_file2page": [True, False],
                "force_openssl": [True, False],  # "Force usage of OpenSSL even under windows"
                "enable_tests": [True, False],
-               #"enable_samples": [True, False],
+               # XXX "enable_samples": [True, False],
                "poco_unbundled": [True, False],
                "cxx_14": [True, False]
                }
@@ -67,7 +67,7 @@ enable_pagecompiler_file2page=False
 force_openssl=True
 enable_tests=False
 poco_unbundled=False
-cxx_14=False
+cxx_14=True
 '''
 
     def source(self):
@@ -84,14 +84,15 @@ cxx_14=False
 
     def configure(self):
         if self.options.enable_apacheconnector:
-            raise Exception("Apache connector not supported: https://github.com/pocoproject/poco/issues/1764")
+            raise Exception(
+                "Apache connector not supported: https://github.com/pocoproject/poco/issues/1764")
 
     def requirements(self):
         if self.options.enable_netssl or self.options.enable_netssl_win or self.options.enable_crypto or self.options.force_openssl:
             self.requires.add("OpenSSL/1.0.2n@conan/stable", private=False)
 
         if self.options.enable_data_mysql:
-            # self.requires.add("MySQLClient/6.1.6@hklabbers/stable")
+                # self.requires.add("MySQLClient/6.1.6@hklabbers/stable")
             raise Exception("MySQL not supported yet, open an issue here please: %s" % self.url)
 
     def build(self):
@@ -101,9 +102,10 @@ cxx_14=False
             tools.replace_in_file("poco/NetSSL_Win/CMakeLists.txt", replace, replace + " ws2_32 ")
 
             replace = 'Foundation ${OPENSSL_LIBRARIES}'
-            tools.replace_in_file("poco/Crypto/CMakeLists.txt", replace, replace + " ws2_32 Crypt32.lib")
+            tools.replace_in_file("poco/Crypto/CMakeLists.txt", replace,
+                                  replace + " ws2_32 Crypt32.lib")
 
-        cmake = CMake(self, parallel=None)  # Parallel crashes building
+        cmake = CMake(self, parallel=None)  # FIXME! Parallel crashes building
         for option_name in self.options.values.fields:
             activated = getattr(self.options, option_name)
             if option_name == "shared":
@@ -112,7 +114,8 @@ cxx_14=False
                 cmake.definitions[option_name.upper()] = "ON" if activated else "OFF"
 
         if self.settings.os == "Windows" and self.settings.compiler == "Visual Studio":  # MT or MTd
-            cmake.definitions["POCO_MT"] = "ON" if "MT" in str(self.settings.compiler.runtime) else "OFF"
+            cmake.definitions["POCO_MT"] = "ON" if "MT" in str(
+                self.settings.compiler.runtime) else "OFF"
         self.output.info(cmake.definitions)
         os.mkdir("build")
         cmake.configure(source_dir="../poco", build_dir="build")
@@ -163,8 +166,8 @@ cxx_14=False
                 ("enable_json", "PocoJSON")]
 
         suffix = str(self.settings.compiler.runtime).lower()  \
-                 if self.settings.compiler == "Visual Studio" and not self.options.shared \
-                 else ("d" if self.settings.build_type=="Debug" else "")
+            if self.settings.compiler == "Visual Studio" and not self.options.shared \
+            else ("d" if self.settings.build_type == "Debug" else "")
         for flag, lib in libs:
             if getattr(self.options, flag):
                 if self.settings.os == "Windows" and flag == "enable_netssl":
