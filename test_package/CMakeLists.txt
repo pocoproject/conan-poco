@@ -6,14 +6,14 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup(TARGETS)
 
 add_executable(echo EchoServer.cpp)
-target_link_libraries(echo ${CONAN_LIBS})
+conan_target_link_libraries(echo)
 
 add_executable(socket socket.cpp)
-target_link_libraries(socket ${CONAN_LIBS})
+conan_target_link_libraries(socket)
 
 add_executable(md5 md5.cpp)
-target_link_libraries(md5 ${CONAN_LIBS})
+conan_target_link_libraries(md5)
 
 add_executable(sample SampleApp.cpp)
-target_link_libraries(sample ${CONAN_LIBS})
+conan_target_link_libraries(sample)
 
