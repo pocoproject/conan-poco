@@ -6,9 +6,9 @@ from conans import ConanFile, tools
 
 
 class PocoConan(ConanFile):
-    name = "Poco"
+    name = "FinSec.Poco"
     version = "1.9.0"
-    url = "http://github.com/pocoproject/conan-poco"
+    url = "http://github.com/FinSecSystems/conan-poco"
     exports_sources = "CMakeLists.txt", "PocoMacros.cmake"  # REMOVE POCOMACROS IN NEXT VERSION!
     generators = "cmake", "txt"
     settings = "os", "arch", "compiler", "build_type"
@@ -67,7 +67,7 @@ enable_pagecompiler_file2page=False
 force_openssl=True
 enable_tests=False
 poco_unbundled=False
-cxx_14=False
+cxx_14=True
 '''
 
     def source(self):
