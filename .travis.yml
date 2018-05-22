@@ -1,7 +1,7 @@
 
 env:
    global:
-     - CONAN_REFERENCE: "FinSecPoco/1.9.0"
+     - CONAN_REFERENCE: "FinSec.Poco/1.9.0"
      - CONAN_USERNAME: "pocoproject"
      - CONAN_LOGIN_USERNAME: "finsecadmin"
      - CONAN_CHANNEL: "testing"
