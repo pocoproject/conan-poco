@@ -1,11 +1,11 @@
 
 env:
    global:
-     - CONAN_REFERENCE: "Poco/1.9.0"
+     - CONAN_REFERENCE: "FinSec.Poco/1.9.0"
      - CONAN_USERNAME: "pocoproject"
-     - CONAN_LOGIN_USERNAME: "obiltschnig"
+     - CONAN_LOGIN_USERNAME: "finsecadmin"
      - CONAN_CHANNEL: "testing"
-     - CONAN_UPLOAD: "https://api.bintray.com/conan/pocoproject/conan"
+     - CONAN_UPLOAD: "https://api.bintray.com/conan/finsecsystem/finsec.pocoproject"
      - CONAN_STABLE_BRANCH_PATTERN: "release/*"
      - CONAN_TOTAL_PAGES: 3
      - CONAN_UPLOAD_ONLY_WHEN_STABLE: 1 # Will only upload when the branch matches "release/*"
