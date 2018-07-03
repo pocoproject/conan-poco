@@ -155,8 +155,7 @@ cxx_14=False
         """ Define the required info that the consumers/users of this package will have
         to add to their projects
         """
-        libs = [("enable_util", "PocoUtil"),
-                ("enable_mongodb", "PocoMongoDB"),
+        libs = [("enable_mongodb", "PocoMongoDB"),
                 ("enable_pdf", "PocoPDF"),
                 ("enable_net", "PocoNet"),
                 ("enable_netssl", "PocoNetSSL"),
@@ -171,6 +170,7 @@ cxx_14=False
                 ("enable_redis", "PocoRedis"),
                 ("enable_encodings", "PocoEncodings"),
                 ("enable_apacheconnector", "PocoApacheConnector"),
+                ("enable_util", "PocoUtil"),
                 ("enable_xml", "PocoXML"),
                 ("enable_json", "PocoJSON")]
 
