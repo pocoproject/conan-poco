@@ -32,6 +32,7 @@ class PocoConan(ConanFile):
                "enable_data_odbc": [True, False],
                "enable_sevenzip": [True, False],
                "enable_zip": [True, False],
+               "enable_redis": [True, False],
                "enable_apacheconnector": [True, False],
                "enable_cppparser": [True, False],
                "enable_pocodoc": [True, False],
@@ -61,6 +62,7 @@ enable_data_mysql=False
 enable_data_odbc=False
 enable_sevenzip=False
 enable_zip=True
+enable_redis=False
 enable_apacheconnector=False
 enable_cppparser=False
 enable_pocodoc=False
@@ -164,6 +166,7 @@ cxx_14=False
                 ("enable_data_odbc", "PocoDataODBC"),
                 ("enable_sevenzip", "PocoSevenZip"),
                 ("enable_zip", "PocoZip"),
+                ("enable_redis", "PocoRedis"),
                 ("enable_apacheconnector", "PocoApacheConnector"),
                 ("enable_xml", "PocoXML"),
                 ("enable_json", "PocoJSON")]
