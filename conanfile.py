@@ -96,8 +96,8 @@ cxx_14=False
             self.requires.add("OpenSSL/1.0.2o@conan/stable", private=False)
 
         if self.options.enable_data_mysql:
-            # self.requires.add("MySQLClient/6.1.6@hklabbers/stable")
-            raise Exception("MySQL not supported yet, open an issue here please: %s" % self.url)
+            self.requires.add("MySQLClient/6.1.6@jrecuerda/stable")
+            #raise Exception("MySQL not supported yet, open an issue here please: %s" % self.url)
 
     def build(self):
         if self.settings.compiler == "Visual Studio" and self.options.shared:
