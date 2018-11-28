@@ -116,6 +116,9 @@ cxx_14=False
             elif not option_name == "fPIC":
                 cmake.definitions[option_name.upper()] = "ON" if activated else "OFF"
 
+        if self.settings.os == "tvOS" or self.settings.os == "watchOS":
+            cmake.definitions["CONAN_CXX_FLAGS"] = "-DPOCO_NO_FORK_EXEC"
+
         if self.settings.os == "Windows" and self.settings.compiler == "Visual Studio":  # MT or MTd
             cmake.definitions["POCO_MT"] = "ON" if "MT" in str(self.settings.compiler.runtime) else "OFF"
         self.output.info(cmake.definitions)
