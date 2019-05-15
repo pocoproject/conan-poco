@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.12)
 PROJECT(conanpoco)
-include(${CMAKE_CURRENT_SOURCE_DIR}/../conanbuildinfo.cmake)
+include(${CMAKE_BINARY_DIR}/../conanbuildinfo.cmake)
 CONAN_BASIC_SETUP()
 
 

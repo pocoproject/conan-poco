@@ -119,8 +119,7 @@ cxx_14=False
         if self.settings.os == "Windows" and self.settings.compiler == "Visual Studio":  # MT or MTd
             cmake.definitions["POCO_MT"] = "ON" if "MT" in str(self.settings.compiler.runtime) else "OFF"
         self.output.info(cmake.definitions)
-        os.mkdir("build")
-        cmake.configure(source_dir="../poco", build_dir="build")
+        cmake.configure(source_folder="poco", build_folder="build")
         cmake.build()
 
     def package(self):
