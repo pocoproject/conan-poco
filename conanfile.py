@@ -110,43 +110,14 @@ cxx_14=False
             replace = 'Foundation ${OPENSSL_LIBRARIES}'
             tools.replace_in_file("poco/Crypto/CMakeLists.txt", replace, replace + " ws2_32 Crypt32.lib")
 
-        cmake = CMake(self, parallel=None)  # Parallel crashes building
-        for option_name in self.options.values.fields:
-            activated = getattr(self.options, option_name)
-            if option_name == "shared":
-                cmake.definitions["POCO_STATIC"] = "OFF" if activated else "ON"
-            elif not option_name == "fPIC":
-                cmake.definitions[option_name.upper()] = "ON" if activated else "OFF"
-
-        if self.settings.os == "Windows" and self.settings.compiler == "Visual Studio":  # MT or MTd
-            cmake.definitions["POCO_MT"] = "ON" if "MT" in str(self.settings.compiler.runtime) else "OFF"
-        self.output.info(cmake.definitions)
-        os.mkdir("build")
-        cmake.configure(source_dir="../poco", build_dir="build")
+        cmake = self._cmake_configure()
         cmake.build()
 
     def package(self):
+        cmake = self._cmake_configure()
+        cmake.install()
         # Copy the license files
         self.copy("poco/LICENSE", dst=".", keep_path=False)
-        # Typically includes we want to keep_path=True (default)
-        packages = ["CppUnit", "Crypto", "Data", "Data/MySQL", "Data/ODBC", "Data/SQLite",
-                    "Foundation", "JSON", "MongoDB", "Net", "Redis", "Util",
-                    "XML", "Zip"]
-        if self.settings.os == "Windows" and self.options.enable_netssl_win:
-            packages.append("NetSSL_Win")
-        else:
-            packages.append("NetSSL_OpenSSL")
-
-        for header in packages:
-            self.copy(pattern="*.h", dst="include", src="poco/%s/include" % header)
-
-        # But for libs and dlls, we want to avoid intermediate folders
-        self.copy(pattern="*.lib", dst="lib", src="build/lib", keep_path=False)
-        self.copy(pattern="*.a",   dst="lib", src="build/lib", keep_path=False)
-        self.copy(pattern="*.dll", dst="bin", src="build/bin", keep_path=False)
-        # in linux shared libs are in lib, not bin
-        self.copy(pattern="*.so*", dst="lib", src="build/lib", keep_path=False, symlinks=True)
-        self.copy(pattern="*.dylib", dst="lib", src="build/lib", keep_path=False)
 
     def package_info(self):
         """ Define the required info that the consumers/users of this package will have
@@ -189,3 +160,22 @@ cxx_14=False
             self.cpp_info.defines.extend(["POCO_STATIC=ON", "POCO_NO_AUTOMATIC_LIBS"])
             if self.settings.compiler == "Visual Studio":
                 self.cpp_info.libs.extend(["ws2_32", "Iphlpapi", "Crypt32"])
+
+
+    def _cmake_configure(self):
+
+        cmake = CMake(self, parallel=None)  # Parallel crashes building
+        for option_name in self.options.values.fields:
+            activated = getattr(self.options, option_name)
+            if option_name == "shared":
+                cmake.definitions["POCO_STATIC"] = "OFF" if activated else "ON"
+            elif not option_name == "fPIC":
+                cmake.definitions[option_name.upper()] = "ON" if activated else "OFF"
+
+        if self.settings.os == "Windows" and self.settings.compiler == "Visual Studio":  # MT or MTd
+            cmake.definitions["POCO_MT"] = "ON" if "MT" in str(self.settings.compiler.runtime) else "OFF"
+        self.output.info(cmake.definitions)
+        tools.mkdir("build")
+        cmake.configure(source_dir="../poco", build_dir="build")
+
+        return cmake
