@@ -54,6 +54,12 @@ matrix:
       - <<: *linux
         env: CONAN_GCC_VERSIONS=8 CONAN_DOCKER_IMAGE=conanio/gcc8 CONAN_CURRENT_PAGE=3
       - <<: *linux
+        env: CONAN_GCC_VERSIONS=9 CONAN_DOCKER_IMAGE=conanio/gcc9 CONAN_CURRENT_PAGE=1
+      - <<: *linux
+        env: CONAN_GCC_VERSIONS=9 CONAN_DOCKER_IMAGE=conanio/gcc9 CONAN_CURRENT_PAGE=2
+      - <<: *linux
+        env: CONAN_GCC_VERSIONS=9 CONAN_DOCKER_IMAGE=conanio/gcc9 CONAN_CURRENT_PAGE=3
+      - <<: *linux
         env: CONAN_CLANG_VERSIONS=3.9 CONAN_DOCKER_IMAGE=conanio/clang39 CONAN_CURRENT_PAGE=1
       - <<: *linux
         env: CONAN_CLANG_VERSIONS=3.9 CONAN_DOCKER_IMAGE=conanio/clang39 CONAN_CURRENT_PAGE=2
@@ -83,6 +89,12 @@ matrix:
         env: CONAN_CLANG_VERSIONS=7.0 CONAN_DOCKER_IMAGE=conanio/clang7 CONAN_CURRENT_PAGE=2
       - <<: *linux
         env: CONAN_CLANG_VERSIONS=7.0 CONAN_DOCKER_IMAGE=conanio/clang7 CONAN_CURRENT_PAGE=3
+      - <<: *linux
+        env: CONAN_CLANG_VERSIONS=8.0 CONAN_DOCKER_IMAGE=conanio/clang8 CONAN_CURRENT_PAGE=1
+      - <<: *linux
+        env: CONAN_CLANG_VERSIONS=8.0 CONAN_DOCKER_IMAGE=conanio/clang8 CONAN_CURRENT_PAGE=2
+      - <<: *linux
+        env: CONAN_CLANG_VERSIONS=8.0 CONAN_DOCKER_IMAGE=conanio/clang8 CONAN_CURRENT_PAGE=3
       - <<: *osx
         osx_image: xcode7.3
         env: CONAN_APPLE_CLANG_VERSIONS=7.3 CONAN_CURRENT_PAGE=1
