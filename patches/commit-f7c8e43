@@ -1,0 +1,139 @@
+From f7c8e43c916691704a89968b62dfe3cd2bb1c0e0 Mon Sep 17 00:00:00 2001
+From: David Callu <callu.david@gmail.com>
+Date: Tue, 8 Nov 2016 15:27:31 +0100
+Subject: feat(Zip): add option to remove / for absolute path
+
+fix(Zip): add support of archive from Quazip
+
+QuaZip store directory with a Deflate Compression method, and a compressed size = 2
+
+diff --git a/Foundation/include/Poco/Path.h b/Foundation/include/Poco/Path.h
+index c50c1a1a8..2ccc2ff82 100644
+--- a/Foundation/include/Poco/Path.h
++++ b/Foundation/include/Poco/Path.h
+@@ -162,7 +162,7 @@ public:
+ 
+ 	Path& makeAbsolute(const Path& base);
+ 		/// Makes the path absolute if it is relative.
+-		/// The given path is taken as base. 
++        /// The given path is taken as base.
+ 
+ 	Path& append(const Path& path);
+ 		/// Appends the given path.
+@@ -173,6 +173,9 @@ public:
+ 		/// If the given path is absolute, it replaces the current one.
+ 		/// Otherwise, the relative path is appended to the current path.
+ 
++    Path& setAbsolute(bool absolute);
++        ///Set the absolute flag
++
+ 	bool isAbsolute() const;
+ 		/// Returns true iff the path is absolute.
+ 		
+diff --git a/Foundation/src/Path.cpp b/Foundation/src/Path.cpp
+index 6b26ca046..5df54582a 100644
+--- a/Foundation/src/Path.cpp
++++ b/Foundation/src/Path.cpp
+@@ -419,6 +419,13 @@ Path& Path::resolve(const Path& path)
+ }
+ 
+ 
++Path& Path::setAbsolute(bool absolute)
++{
++    _absolute = absolute;
++    return *this;
++}
++
++
+ Path& Path::setNode(const std::string& node)
+ {
+ 	_node     = node;
+diff --git a/Zip/include/Poco/Zip/Decompress.h b/Zip/include/Poco/Zip/Decompress.h
+index ca4ae296a..de7578173 100644
+--- a/Zip/include/Poco/Zip/Decompress.h
++++ b/Zip/include/Poco/Zip/Decompress.h
+@@ -43,7 +43,7 @@ public:
+ 	Poco::FIFOEvent<std::pair<const ZipLocalFileHeader, const Poco::Path> > EOk;
+ 		/// Thrown whenever a file was successfully decompressed
+ 
+-	Decompress(std::istream& in, const Poco::Path& outputDir, bool flattenDirs = false, bool keepIncompleteFiles = false);
++    Decompress(std::istream& in, const Poco::Path& outputDir, bool flattenDirs = false, bool keepIncompleteFiles = false, bool forceRelativePath = false);
+ 		/// Creates the Decompress. Note that istream must be good and at the very beginning of the file!
+ 		/// Calling decompressAllFiles will cause the stream to be in state failed once the zip file is processed.
+ 		/// outputDir must be a directory. If it doesn't exist yet, it will be automatically created.
+@@ -74,7 +74,9 @@ private:
+ 	Poco::Path    _outDir;
+ 	bool          _flattenDirs;
+ 	bool          _keepIncompleteFiles;
++    bool          _forceRelativePath;
+ 	ZipMapping    _mapping;
++
+ };
+ 
+ 
+diff --git a/Zip/include/Poco/Zip/ZipLocalFileHeader.h b/Zip/include/Poco/Zip/ZipLocalFileHeader.h
+index 48b07cdfb..2be8807ad 100644
+--- a/Zip/include/Poco/Zip/ZipLocalFileHeader.h
++++ b/Zip/include/Poco/Zip/ZipLocalFileHeader.h
+@@ -473,7 +473,8 @@ inline bool ZipLocalFileHeader::isFile() const
+ inline bool ZipLocalFileHeader::isDirectory() const
+ {
+ 	poco_assert_dbg(!_fileName.empty());
+-	return getUncompressedSize() == 0 && _fileName[_fileName.length()-1] == '/';
++	return    (getUncompressedSize() == 0)
++		&& (_fileName[_fileName.length()-1] == '/');
+ }
+ 
+ 
+diff --git a/Zip/src/Decompress.cpp b/Zip/src/Decompress.cpp
+index 8d3a60985..cc92d0d84 100644
+--- a/Zip/src/Decompress.cpp
++++ b/Zip/src/Decompress.cpp
+@@ -29,11 +29,12 @@ namespace Poco {
+ namespace Zip {
+ 
+ 
+-Decompress::Decompress(std::istream& in, const Poco::Path& outputDir, bool flattenDirs, bool keepIncompleteFiles):
++Decompress::Decompress(std::istream& in, const Poco::Path& outputDir, bool flattenDirs, bool keepIncompleteFiles, bool forceRelativePath):
+ 	_in(in),
+ 	_outDir(outputDir),
+ 	_flattenDirs(flattenDirs),
+ 	_keepIncompleteFiles(keepIncompleteFiles),
++    _forceRelativePath(forceRelativePath),
+ 	_mapping()
+ {
+ 	_outDir.makeAbsolute();
+@@ -76,7 +77,7 @@ bool Decompress::handleZipEntry(std::istream& zipStream, const ZipLocalFileHeade
+ {
+ 	if (hdr.isDirectory())
+ 	{
+-		// directory have 0 size, nth to read
++		zipStream.seekg(hdr.getCompressedSize(), std::istream::cur);
+ 		if (!_flattenDirs)
+ 		{
+ 			std::string dirName = hdr.getFileName();
+@@ -99,6 +100,7 @@ bool Decompress::handleZipEntry(std::istream& zipStream, const ZipLocalFileHeade
+ 	try
+ 	{
+ 		std::string fileName = hdr.getFileName();
++
+ 		if (_flattenDirs)
+ 		{
+ 			// remove path info
+@@ -118,7 +120,15 @@ bool Decompress::handleZipEntry(std::istream& zipStream, const ZipLocalFileHeade
+ 		}
+ 
+ 		Poco::Path file(fileName);
+-		file.makeFile();
++        file.makeFile();
++
++        if (_forceRelativePath && file.isAbsolute())
++        {
++            file.setNode(std::string());
++            file.setDevice(std::string());
++            file.setAbsolute(false);
++        }
++
+ 		Poco::Path dest(_outDir, file);
+ 		dest.makeFile();
+ 		if (dest.depth() > 0)

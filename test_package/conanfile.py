@@ -15,6 +15,8 @@ class DefaultNameConan(ConanFile):
         cmake.build()
 
     def imports(self):
+        self.copy(pattern="*.so", dst="bin", src="bin")
+        self.copy(pattern="*.so.*", dst="bin", src="bin")
         self.copy(pattern="*.dll", dst="bin", src="bin")
         self.copy(pattern="*.dylib", dst="bin", src="lib")
 
