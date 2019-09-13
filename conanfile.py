@@ -73,6 +73,9 @@ poco_unbundled=False
 cxx_14=False
 '''
 
+    exports_sources = ['patches/*', 'CMakeLists.txt', 'PocoMacros.cmake']
+
+
     def source(self):
         zip_name = "poco-%s-release.zip" % self.version
         tools.download("https://github.com/pocoproject/poco/archive/%s" % zip_name, zip_name)
@@ -84,6 +87,11 @@ cxx_14=False
         # Patch the PocoMacros.cmake to fix the detection of the win10 sdk.
         # NOTE: ALREADY FIXED IN POCO REPO, REMOVE THIS FOR NEXT VERSION
         shutil.move("PocoMacros.cmake", "poco/cmake/PocoMacros.cmake")
+
+        tools.patch(patch_file="patches/commit-f7c8e43",
+                    base_path=os.path.join(self.source_folder, "poco"))
+
+
 
     def config_options(self):
         if self.settings.os == "Windows":
