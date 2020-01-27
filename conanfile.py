@@ -7,7 +7,7 @@ from conans import ConanFile, tools
 
 class PocoConan(ConanFile):
     name = "Poco"
-    version = "1.9.3"
+    version = "1.10.0"
     url = "http://github.com/pocoproject/conan-poco"
     exports_sources = "CMakeLists.txt", "PocoMacros.cmake"  # REMOVE POCOMACROS IN NEXT VERSION!
     generators = "cmake", "txt"
@@ -17,6 +17,7 @@ class PocoConan(ConanFile):
                   "applications that run on desktop, server, mobile and embedded systems."
     options = {"shared": [True, False],
                "fPIC": [True, False],
+               "enable_encodings": [True, False],
                "enable_xml": [True, False],
                "enable_json": [True, False],
                "enable_mongodb": [True, False],
@@ -26,10 +27,12 @@ class PocoConan(ConanFile):
                "enable_netssl": [True, False],
                "enable_netssl_win": [True, False],
                "enable_crypto": [True, False],
+               "enable_jwt": [True, False],
                "enable_data": [True, False],
                "enable_data_sqlite": [True, False],
                "enable_data_mysql": [True, False],
                "enable_data_odbc": [True, False],
+               "enable_data_postgresql": [True, False],
                "enable_sevenzip": [True, False],
                "enable_zip": [True, False],
                "enable_apacheconnector": [True, False],
@@ -46,6 +49,7 @@ class PocoConan(ConanFile):
     default_options = '''
 shared=False
 fPIC=True
+enable_encodings=True
 enable_xml=True
 enable_json=True
 enable_mongodb=True
@@ -55,10 +59,12 @@ enable_net=True
 enable_netssl=True
 enable_netssl_win=True
 enable_crypto=True
+enable_jwt=True
 enable_data=True
 enable_data_sqlite=True
 enable_data_mysql=False
 enable_data_odbc=False
+enable_data_postgresql=False
 enable_sevenzip=False
 enable_zip=True
 enable_apacheconnector=False
@@ -129,7 +135,8 @@ cxx_14=False
         # Copy the license files
         self.copy("poco/LICENSE", dst=".", keep_path=False)
         # Typically includes we want to keep_path=True (default)
-        packages = ["CppUnit", "Crypto", "Data", "Data/MySQL", "Data/ODBC", "Data/SQLite",
+        packages = ["CppUnit", "Crypto", "JWT", "Data",
+                    "Data/MySQL", "Data/ODBC", "Data/PostgreSQL", "Data/SQLite",
                     "Foundation", "JSON", "MongoDB", "Net", "Redis", "Util",
                     "XML", "Zip"]
         if self.settings.os == "Windows" and self.options.enable_netssl_win:
@@ -152,15 +159,18 @@ cxx_14=False
         """ Define the required info that the consumers/users of this package will have
         to add to their projects
         """
-        libs = [("enable_mongodb", "PocoMongoDB"),
+        libs = [("enable_encodings", "PocoEncodings"),
+                ("enable_mongodb", "PocoMongoDB"),
                 ("enable_pdf", "PocoPDF"),
                 ("enable_netssl", "PocoNetSSL"),
                 ("enable_netssl_win", "PocoNetSSLWin"),
                 ("enable_net", "PocoNet"),
                 ("enable_crypto", "PocoCrypto"),
+                ("enable_jwt", "PocoJWT"),
                 ("enable_data_sqlite", "PocoDataSQLite"),
                 ("enable_data_mysql", "PocoDataMySQL"),
                 ("enable_data_odbc", "PocoDataODBC"),
+                ("enable_data_postgresql", "PocoDataPostgreSQL"),
                 ("enable_data", "PocoData"),
                 ("enable_sevenzip", "PocoSevenZip"),
                 ("enable_zip", "PocoZip"),
