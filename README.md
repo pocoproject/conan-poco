@@ -3,7 +3,7 @@ Conan Packages for POCO C++ Libraries
 
 [Conan.io](https://conan.io) package for [POCO](http://pocoproject.org/) library
 
-The packages generated with this **conanfile** can be found in [conan.io](https://conan.io/source/Poco/1.9.3/pocoproject/stable).
+The packages generated with this **conanfile** can be found in [conan.io](https://conan.io/source/Poco/1.10.0/pocoproject/stable).
 
 ## Build Status
 
@@ -21,20 +21,20 @@ If your are in Windows you should run it from a VisualStudio console in order to
 
 ## Upload Packages to Server
 
-    $ conan upload Poco/1.9.3@pocoproject/stable --all
+    $ conan upload Poco/1.10.0@pocoproject/stable --all
 
 ## Reuse the Packages
 
 ### Basic Setup
 
-    $ conan install Poco/1.9.3@pocoproject/stable
+    $ conan install Poco/1.10.0@pocoproject/stable
 
 ### Project Setup
 
 If you handle multiple dependencies in your project is better to add a *conanfile.txt*
 
     [requires]
-    Poco/1.9.3@pocoproject/stable
+    Poco/1.10.0@pocoproject/stable
 
     [options]
     Poco:shared=True # False
