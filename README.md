@@ -3,6 +3,11 @@ Conan Packages for POCO C++ Libraries
 
 [Conan.io](https://conan.io) package for [POCO](http://pocoproject.org/) library
 
+NOTE: This project has been retired. The Conan packages for POCO are now built
+in [Conan Center](https://github.com/conan-io/conan-center-index).
+
+---
+
 The packages generated with this **conanfile** can be found in [conan.io](https://conan.io/source/Poco/1.9.3/pocoproject/stable).
 
 ## Build Status
